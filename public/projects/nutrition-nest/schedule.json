@@ -1,0 +1,26 @@
+[
+    {
+        "id": "morning-rush",
+        "name": "Morning Coffee",
+        "startTime": "06:00",
+        "endTime": "11:00",
+        "configOverrides": {
+            "title": "Morning Brew",
+            "subtitle": "Fresh Roast & Pastries",
+            "theme": "light_luxury"
+        },
+        "active": false
+    },
+    {
+        "id": "evening-chill",
+        "name": "Evening Cocktails",
+        "startTime": "17:00",
+        "endTime": "23:00",
+        "configOverrides": {
+            "title": "Evening Lounge",
+            "subtitle": "Craft Cocktails & Tapas",
+            "theme": "midnight_blue"
+        },
+        "active": false
+    }
+]

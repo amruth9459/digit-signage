@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600&family=Tenor+Sans&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Josefin Sans', sans-serif;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input,
+textarea {
+  font-family: inherit;
+  border: none;
+  background: transparent;
+  outline: none;
+  color: inherit;
+  resize: none;
+}
+
+/* Animations */
+
+
+
+/* Gold Shimmer Effect */
+@keyframes gold-shimmer {
+  0% {
+    background-position: -200%;
+  }
+
+  100% {
+    background-position: 200%;
+  }
+}
+
+.animate-gold-shimmer {
+  background-size: 200% auto;
+  animation: gold-shimmer 4s linear infinite;
+}

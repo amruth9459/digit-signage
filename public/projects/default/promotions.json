@@ -1,0 +1,20 @@
+[
+    {
+        "id": "p1",
+        "title": "Heritage Olive Oil",
+        "offer": "New Harvest",
+        "image": "/products/oil.png"
+    },
+    {
+        "id": "p2",
+        "title": "Manuka Honey",
+        "offer": "Limited Batch",
+        "image": "/products/honey.png"
+    },
+    {
+        "id": "p3",
+        "title": "Heirloom Tomato",
+        "offer": "Farm Direct",
+        "image": "/products/tomato.png"
+    }
+]
