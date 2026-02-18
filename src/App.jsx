@@ -7,7 +7,7 @@ import AdminHub from './admin/AdminHub';
 
 function App() {
   return (
-    <Router>
+    <Router basename={import.meta.env.BASE_URL}>
       <Routes>
         <Route path="/" element={<SignagePlayer />} />
         <Route path="/admin" element={<AdminHub />} />

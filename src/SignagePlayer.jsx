@@ -43,32 +43,15 @@ function SignagePlayer() {
 
   // Load configuration from config.json (Runtime Config)
   useEffect(() => {
-    // Get Project ID from URL
+    // Get Project ID from URL, default to 'nutrition-nest' for static hosting
     const params = new URLSearchParams(window.location.search);
-    const projectIdParam = params.get('project');
-
-    // If no project specified in URL, we check if we are "paired" logic?
-    // Actually, for now, let's say if URL has ?project=..., we load it.
-    // If NOT, we show Pairing Screen.
-    // BUT we need to support the "default" fallback for dev?
-    // Let's make it strict: 
-    // - If ?project=X, load X.
-    // - If no query param, show Pairing Screen.
-    // - (Unless we want a default dev mode? Let's assume production behavior by default now).
-
-    if (!projectIdParam) {
-      // Check if we strictly want this behavior. The previous code defaulted to 'default'.
-      // To enable "Assigning Displays", we must stop defaulting to 'default' automatically 
-      // unless we are in a specific mode. 
-      // Let's use a flag or just assume root / means "Unassigned Player".
-      setNeedsPairing(true);
-      return;
-    }
+    const projectIdParam = params.get('project') || 'nutrition-nest';
 
     const projectId = projectIdParam;
+    const basePath = import.meta.env.BASE_URL || '/';
 
     // Load Text Config & Theme
-    fetch(`/api/config?project=${projectId}`)
+    fetch(`${basePath}projects/${projectId}/config.json`)
       .then(res => res.json())
       .then(data => {
         if (data.number) setNumber(data.number);
@@ -80,7 +63,7 @@ function SignagePlayer() {
       .catch(err => console.error("Failed to load config.json:", err));
 
     // Load Promotions Data
-    fetch(`/api/promotions?project=${projectId}`)
+    fetch(`${basePath}projects/${projectId}/promotions.json`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) {
@@ -91,7 +74,7 @@ function SignagePlayer() {
       .catch(err => console.error("Failed to load promotions.json:", err));
 
     // Load Schedule
-    fetch(`/api/schedule?project=${projectId}`)
+    fetch(`${basePath}projects/${projectId}/schedule.json`)
       .then(res => res.json())
       .then(schedules => {
         if (Array.isArray(schedules) && schedules.length > 0) {

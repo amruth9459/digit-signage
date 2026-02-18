@@ -53,7 +53,7 @@ const ImageCarousel = ({
                     <div style={{
                         width: '100%',
                         height: '100%',
-                        backgroundImage: `url(${promo.image})`,
+                        backgroundImage: `url(${promo.image.startsWith('/') ? import.meta.env.BASE_URL + promo.image.slice(1) : promo.image})`,
                         backgroundSize: 'cover',
                         backgroundPosition: 'center center', // Reset to Center for Wide Shots
                     }} />
