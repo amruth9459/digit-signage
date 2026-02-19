@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 
 // Use a binary search to find the largest font size that fits
 const AutoScalableText = ({
@@ -8,25 +8,31 @@ const AutoScalableText = ({
     maxFontSize = 200,
     className = "",
     placeholder = "Type here...",
-    multiline = false
+    multiline = false,
+    style: externalStyle = {}
 }) => {
-    const [fontSize, setFontSize] = useState(maxFontSize);
+    const [fontSize, setFontSize] = useState(minFontSize);
     const containerRef = useRef(null);
     const hiddenRef = useRef(null);
 
-    useEffect(() => {
+    const recalc = useCallback(() => {
         const container = containerRef.current;
         const hidden = hiddenRef.current;
         if (!container || !hidden) return;
 
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        if (containerWidth === 0 || containerHeight === 0) return;
+
+        // Set hidden div to match container width for measurement
+        hidden.style.width = `${containerWidth}px`;
+
         const checkFit = (size) => {
             hidden.style.fontSize = `${size}px`;
-            // For multiline, we care about height mostly, but also width
-            // For single line, we care about width mostly
             if (multiline) {
-                return hidden.scrollHeight <= container.clientHeight && hidden.scrollWidth <= container.clientWidth;
+                return hidden.scrollHeight <= containerHeight && hidden.scrollWidth <= containerWidth;
             } else {
-                return hidden.scrollWidth <= container.clientWidth && hidden.scrollHeight <= container.clientHeight;
+                return hidden.scrollWidth <= containerWidth && hidden.scrollHeight <= containerHeight;
             }
         };
 
@@ -48,6 +54,25 @@ const AutoScalableText = ({
         setFontSize(best);
     }, [value, minFontSize, maxFontSize, multiline]);
 
+    useEffect(() => {
+        recalc();
+    }, [recalc]);
+
+    // Re-measure when the window resizes (critical for vh/vw containers)
+    useEffect(() => {
+        window.addEventListener('resize', recalc);
+        return () => window.removeEventListener('resize', recalc);
+    }, [recalc]);
+
+    // Also use ResizeObserver on the container itself
+    useEffect(() => {
+        const container = containerRef.current;
+        if (!container || typeof ResizeObserver === 'undefined') return;
+        const ro = new ResizeObserver(() => recalc());
+        ro.observe(container);
+        return () => ro.disconnect();
+    }, [recalc]);
+
     const style = {
         fontSize: `${fontSize}px`,
         width: '100%',
@@ -63,6 +88,7 @@ const AutoScalableText = ({
         padding: 0,
         margin: 0,
         lineHeight: multiline ? 1.2 : 1,
+        ...externalStyle,
     };
 
     // Hidden div to measure text size
@@ -71,13 +97,15 @@ const AutoScalableText = ({
         position: 'absolute',
         visibility: 'hidden',
         whiteSpace: multiline ? 'pre-wrap' : 'pre',
-        width: containerRef.current ? containerRef.current.clientWidth : 'auto',
-        height: 'auto', // Allow it to grow to measure
-        maxHeight: multiline ? containerRef.current?.clientHeight : 'none',
+        height: 'auto',
+        maxHeight: 'none',
+        top: 0,
+        left: 0,
+        pointerEvents: 'none',
     };
 
     return (
-        <div ref={containerRef} className={className} style={{ position: 'relative', overflow: 'hidden' }}>
+        <div ref={containerRef} className={className} style={{ position: 'relative', overflow: 'hidden', width: '100%', height: '100%' }}>
             <div ref={hiddenRef} style={hiddenStyle}>
                 {value || placeholder}
             </div>

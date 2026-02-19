@@ -12,22 +12,7 @@ import { themes, defaultTheme } from './themes';
 import PairingScreen from './components/PairingScreen';
 
 function SignagePlayer() {
-  // Scaling for preview on smaller screens
-  const [scale, setScale] = useState(1);
   const [needsPairing, setNeedsPairing] = useState(false);
-
-  // React to window resize to fit the 540x1920 viewport
-  React.useEffect(() => {
-    const handleResize = () => {
-      const hScale = window.innerHeight / 1920;
-      const wScale = window.innerWidth / 540;
-      // Use the smaller scale to fit, but max 1
-      setScale(Math.min(hScale, wScale, 1));
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   // Configurable State
   const [number, setNumber] = useState('12');
@@ -130,29 +115,26 @@ function SignagePlayer() {
   return (
     <div
       style={{
-        width: 540,
-        height: 1920,
+        width: '100vw',
+        height: '100vh',
         backgroundColor: theme.background,
         position: 'relative',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
-        transform: `scale(${scale})`,
-        transformOrigin: 'center center',
-        boxShadow: '0 0 50px rgba(0,0,0,0.5)',
         color: theme.textPrimary
       }}
     >
       {/* Top Bar (Matches Background) */}
       <div style={{ height: '40px', backgroundColor: theme.background, width: '100%', flexShrink: 0 }}></div>
 
-      <div style={{ padding: '60px 50px 0 50px', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      <div style={{ padding: '3vh 4vw 0 4vw', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         {/* Number 12 */}
-        <div style={{ height: '180px', marginBottom: '30px', flexShrink: 0 }}>
+        <div style={{ height: '12vh', marginBottom: '1.5vh', flexShrink: 0 }}>
           <AutoScalableText
             value={number}
             onChange={setNumber}
-            minFontSize={100}
+            minFontSize={24}
             maxFontSize={250}
             className="text-brown-gold animate-gold-shimmer"
             style={{
@@ -166,11 +148,11 @@ function SignagePlayer() {
         </div>
 
         {/* PANTRY */}
-        <div style={{ height: '80px', marginBottom: '10px', flexShrink: 0 }}>
+        <div style={{ height: '6vh', marginBottom: '0.5vh', flexShrink: 0 }}>
           <AutoScalableText
             value={title}
             onChange={setTitle}
-            minFontSize={40}
+            minFontSize={14}
             maxFontSize={100}
             style={{
               background: theme.headerGradient,
@@ -185,11 +167,11 @@ function SignagePlayer() {
         </div>
 
         {/* OUR SELECTS */}
-        <div style={{ height: '60px', marginBottom: '50px', flexShrink: 0 }}>
+        <div style={{ height: '5vh', marginBottom: '2vh', flexShrink: 0 }}>
           <AutoScalableText
             value={subtitle}
             onChange={setSubtitle}
-            minFontSize={30}
+            minFontSize={12}
             maxFontSize={80}
             style={{
               color: theme.textSecondary,
@@ -205,7 +187,7 @@ function SignagePlayer() {
         <div style={{
           flex: 1,
           overflow: 'hidden',
-          marginBottom: '20px',
+          marginBottom: '1vh',
           maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
           WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)'
         }}>
@@ -218,7 +200,7 @@ function SignagePlayer() {
               fontFamily: 'Josefin Sans',
               fontWeight: 300,
               textAlign: 'left',
-              fontSize: '36px',
+              fontSize: 'clamp(16px, 2.5vw, 36px)',
               textTransform: 'uppercase',
               letterSpacing: '2px'
             }}
@@ -239,7 +221,7 @@ function SignagePlayer() {
           position: 'absolute',
           inset: 0,
           zIndex: 0,
-          borderBottomRightRadius: '540px',
+          borderBottomRightRadius: '50vw',
           overflow: 'hidden',
           boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
         }}>
