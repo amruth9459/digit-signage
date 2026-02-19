@@ -12,7 +12,22 @@ import { themes, defaultTheme } from './themes';
 import PairingScreen from './components/PairingScreen';
 
 function SignagePlayer() {
+  // Scaling for portrait display
+  const [scale, setScale] = useState(1);
   const [needsPairing, setNeedsPairing] = useState(false);
+
+  // Scale the fixed 540x1920 canvas to fill the viewport
+  React.useEffect(() => {
+    const handleResize = () => {
+      const hScale = window.innerHeight / 1920;
+      const wScale = window.innerWidth / 540;
+      // Use the smaller scale to fit entirely on screen
+      setScale(Math.min(hScale, wScale));
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Configurable State
   const [number, setNumber] = useState('12');
@@ -113,169 +128,181 @@ function SignagePlayer() {
   }
 
   return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: theme.background,
-        position: 'relative',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        color: theme.textPrimary
-      }}
-    >
-      {/* Top Bar (Matches Background) */}
-      <div style={{ height: '40px', backgroundColor: theme.background, width: '100%', flexShrink: 0 }}></div>
-
-      <div style={{ padding: '3vh 4vw 0 4vw', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        {/* Number 12 */}
-        <div style={{ height: '12vh', marginBottom: '1.5vh', flexShrink: 0 }}>
-          <AutoScalableText
-            value={number}
-            onChange={setNumber}
-            minFontSize={24}
-            maxFontSize={250}
-            className="text-brown-gold animate-gold-shimmer"
-            style={{
-              background: theme.headerGradient,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontFamily: 'Tenor Sans',
-              textAlign: 'left'
-            }}
-          />
-        </div>
-
-        {/* PANTRY */}
-        <div style={{ height: '6vh', marginBottom: '0.5vh', flexShrink: 0 }}>
-          <AutoScalableText
-            value={title}
-            onChange={setTitle}
-            minFontSize={14}
-            maxFontSize={100}
-            style={{
-              background: theme.headerGradient,
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              fontFamily: 'Josefin Sans',
-              fontWeight: 600,
-              textAlign: 'left',
-              textTransform: 'uppercase'
-            }}
-          />
-        </div>
-
-        {/* OUR SELECTS */}
-        <div style={{ height: '5vh', marginBottom: '2vh', flexShrink: 0 }}>
-          <AutoScalableText
-            value={subtitle}
-            onChange={setSubtitle}
-            minFontSize={12}
-            maxFontSize={80}
-            style={{
-              color: theme.textSecondary,
-              fontFamily: 'Josefin Sans',
-              fontWeight: 300,
-              textAlign: 'left',
-              textTransform: 'uppercase'
-            }}
-          />
-        </div>
-
-        {/* Scrolling Items List */}
-        <div style={{
-          flex: 1,
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      backgroundColor: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden'
+    }}>
+      <div
+        style={{
+          width: 540,
+          height: 1920,
+          backgroundColor: theme.background,
+          position: 'relative',
           overflow: 'hidden',
-          marginBottom: '1vh',
-          maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)'
-        }}>
-          <ScrollingList
-            items={items}
-            onChange={setItems}
-            borderColor={theme.listDivider}
-            itemStyle={{
-              color: theme.textPrimary,
-              fontFamily: 'Josefin Sans',
-              fontWeight: 300,
-              textAlign: 'left',
-              fontSize: 'clamp(16px, 2.5vw, 36px)',
-              textTransform: 'uppercase',
-              letterSpacing: '2px'
-            }}
-          />
-        </div>
-      </div>
+          display: 'flex',
+          flexDirection: 'column',
+          transform: `scale(${scale})`,
+          transformOrigin: 'center center',
+          color: theme.textPrimary
+        }}
+      >
+        {/* Top Bar (Matches Background) */}
+        <div style={{ height: '40px', backgroundColor: theme.background, width: '100%', flexShrink: 0 }}></div>
 
-      {/* Bottom Section (Dots Pattern + Carousel) */}
-      <div style={{
-        height: '40%',
-        position: 'relative',
-        width: '100%',
-        marginTop: 'auto',
-        flexShrink: 0
-      }}>
-        {/* Carousel Background with Organic Shape */}
+        <div style={{ padding: '60px 50px 0 50px', flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+          {/* Number 12 */}
+          <div style={{ height: '180px', marginBottom: '30px', flexShrink: 0 }}>
+            <AutoScalableText
+              value={number}
+              onChange={setNumber}
+              minFontSize={100}
+              maxFontSize={250}
+              className="text-brown-gold animate-gold-shimmer"
+              style={{
+                background: theme.headerGradient,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontFamily: 'Tenor Sans',
+                textAlign: 'left'
+              }}
+            />
+          </div>
+
+          {/* PANTRY */}
+          <div style={{ height: '80px', marginBottom: '10px', flexShrink: 0 }}>
+            <AutoScalableText
+              value={title}
+              onChange={setTitle}
+              minFontSize={40}
+              maxFontSize={100}
+              style={{
+                background: theme.headerGradient,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontFamily: 'Josefin Sans',
+                fontWeight: 600,
+                textAlign: 'left',
+                textTransform: 'uppercase'
+              }}
+            />
+          </div>
+
+          {/* OUR SELECTS */}
+          <div style={{ height: '60px', marginBottom: '50px', flexShrink: 0 }}>
+            <AutoScalableText
+              value={subtitle}
+              onChange={setSubtitle}
+              minFontSize={30}
+              maxFontSize={80}
+              style={{
+                color: theme.textSecondary,
+                fontFamily: 'Josefin Sans',
+                fontWeight: 300,
+                textAlign: 'left',
+                textTransform: 'uppercase'
+              }}
+            />
+          </div>
+
+          {/* Scrolling Items List */}
+          <div style={{
+            flex: 1,
+            overflow: 'hidden',
+            marginBottom: '20px',
+            maskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 90%, transparent 100%)'
+          }}>
+            <ScrollingList
+              items={items}
+              onChange={setItems}
+              borderColor={theme.listDivider}
+              itemStyle={{
+                color: theme.textPrimary,
+                fontFamily: 'Josefin Sans',
+                fontWeight: 300,
+                textAlign: 'left',
+                fontSize: '36px',
+                textTransform: 'uppercase',
+                letterSpacing: '2px'
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Bottom Section (Dots Pattern + Carousel) */}
         <div style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 0,
-          borderBottomRightRadius: '50vw',
-          overflow: 'hidden',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+          height: '40%',
+          position: 'relative',
+          width: '100%',
+          marginTop: 'auto',
+          flexShrink: 0
         }}>
-          <ImageCarousel
-            promos={promos.length > 0 ? promos : [
-              { image: '/products/oil.png', title: "Heritage Olive Oil", offer: "New Harvest" },
-              { image: '/products/honey.png', title: "Raw Manuka Honey", offer: "Limited Batch" },
-              { image: '/products/tomato.png', title: "Heirloom Tomato", offer: "Farm Direct" }
-            ]}
-            badgeTextColor={theme.promoBadgeText}
-            badgeBorderColor={theme.promoBadgeBorder}
-            badgeBgColor={theme.promoBadgeBg}
-            titleColor={theme.promoTitle}
-            gradientOverlay={theme.promoGradient}
-          />
+          {/* Carousel Background with Organic Shape */}
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 0,
+            borderBottomRightRadius: '540px',
+            overflow: 'hidden',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+          }}>
+            <ImageCarousel
+              promos={promos.length > 0 ? promos : [
+                { image: '/products/oil.png', title: "Heritage Olive Oil", offer: "New Harvest" },
+                { image: '/products/honey.png', title: "Raw Manuka Honey", offer: "Limited Batch" },
+                { image: '/products/tomato.png', title: "Heirloom Tomato", offer: "Farm Direct" }
+              ]}
+              badgeTextColor={theme.promoBadgeText}
+              badgeBorderColor={theme.promoBadgeBorder}
+              badgeBgColor={theme.promoBadgeBg}
+              titleColor={theme.promoTitle}
+              gradientOverlay={theme.promoGradient}
+            />
 
-          {/* Dots Overlay */}
-          <div
-            className="absolute top-0 left-0 w-full h-full pointer-events-none"
-            style={{
-              backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
-              backgroundSize: '20px 20px',
-              opacity: 0.3,
-              maskImage: 'linear-gradient(to bottom, black 0%, transparent 80%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 80%)'
-            }}
-          />
-        </div>
+            {/* Dots Overlay */}
+            <div
+              className="absolute top-0 left-0 w-full h-full pointer-events-none"
+              style={{
+                backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)',
+                backgroundSize: '20px 20px',
+                opacity: 0.3,
+                maskImage: 'linear-gradient(to bottom, black 0%, transparent 80%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, black 0%, transparent 80%)'
+              }}
+            />
+          </div>
 
-        {/* 
+          {/* 
             Dedicated Logo Pedestal 
             Position: Bottom Right, revealed by the organic curve of the image container above.
         */}
-        <div style={{
-          position: 'absolute',
-          bottom: '30px',
-          right: '30px',
-          zIndex: 10,
-          width: '120px',
-          height: '120px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <Logo
-            width="100%"
-            height="100%"
-            gradientStart={theme.logoGradientStart}
-            gradientEnd={theme.logoGradientEnd}
-            dropShadow={theme.logoShadow}
-          />
+          <div style={{
+            position: 'absolute',
+            bottom: '30px',
+            right: '30px',
+            zIndex: 10,
+            width: '120px',
+            height: '120px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <Logo
+              width="100%"
+              height="100%"
+              gradientStart={theme.logoGradientStart}
+              gradientEnd={theme.logoGradientEnd}
+              dropShadow={theme.logoShadow}
+            />
+          </div>
         </div>
-      </div>
-    </div >
+      </div >
+    </div>
   );
 }
 
